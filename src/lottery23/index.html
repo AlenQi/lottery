@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>云盾年会抽奖</title>
+	<style>
+		ul {
+			list-style-type: none
+		}
+
+		.wrap {
+			width: 1408px;
+			height: 768px;
+			font-family: "微软雅黑";
+			background: url('./image/23bg.png') no-repeat;
+			background-size: cover;
+		}
+
+		.wrap li {
+			height: 150px;
+			width: 150px;
+		}
+
+		.show {
+			border-radius: 15px;
+			overflow: hidden;
+			position: relative;
+			width: 245px;
+			height: 245px;
+			top: 284px;
+			left: 582px;
+		}
+
+		.show img {
+			height: 245px;
+			width: 245px;
+		}
+
+		img {
+			border: 0
+		}
+
+		.five li,
+		.four li {
+			position: absolute;
+			border-radius: 15px;
+		}
+
+		.rahmen {
+			height: 150px;
+			width: 150px;
+		}
+
+		.four li:nth-child(1) {
+			background: red;
+			left: 150px;
+			top: 356px;
+		}
+
+		.four li:nth-child(2) {
+			background: red;
+			left: 336px;
+			top: 356px;
+		}
+
+		.five li:nth-child(1) {
+			background: red;
+			left: 892px;
+			top: 356px;
+		}
+
+		.five li:nth-child(2) {
+			background: green;
+			left: 1064px;
+			top: 356px;
+		}
+
+		.five li:nth-child(3) {
+			background: green;
+			left: 1235px;
+			top: 356px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="wrap">
+		<div class="show" id="show">
+			<div id="imgDiv">
+				<img src="./image/1.jpeg" id="image">
+			</div>
+		</div>
+		<ul class="four">
+			<li><img class="rahmen" id="img1"></li>
+			<li><img class="rahmen" id="img2"></li>
+		</ul>
+		<ul class="five">
+			<li><img class="rahmen" id="img3"></li>
+			<li><img class="rahmen" id="img4"></li>
+			<li><img class="rahmen" id="img5"></li>
+		</ul>
+	</div>
+
+</body>
+
+<script type="text/javascript" class="library" src="./jquery.js"></script>
+<script type="text/javascript">
+	$(function() {
+		var alldata = new Array(
+			'image/1.jpeg',
+			'image/2.jpg',
+			'image/3.png',
+			'image/4.png',
+			'image/5.png',
+			'image/6.png',
+			'image/7.png',
+			'image/8.jpg',
+			'image/9.jpg',
+			'image/10.jpg',
+			'image/11.jpg'
+		)
+		var imageName = new Array(
+			'#img1',
+			'#img2',
+			'#img3',
+			'#img4',
+			'#img5'
+		)
+		var nameNum = imageName.length - 1
+		var num = alldata.length
+		var show = $('#image')
+		var open = false
+
+		function change() {
+			var randomVal = Math.floor(Math.random() * num)
+			var prizeName = alldata[randomVal]
+			show.attr('src', prizeName)
+		}
+
+		Array.prototype.indexOf = function(val) {
+			for (var i = 0; i < this.length; i++) {
+				if (this[i] == val) return i
+			}
+			return -1
+		}
+
+		Array.prototype.remove = function(val) {
+			var index = this.indexOf(val)
+			if (index > -1) {
+				this.splice(index, 1)
+			}
+		}
+
+		function run() {
+			if (!open) {
+				timer = setInterval(change, 20)
+				open = true
+			} else {
+				var height = $(imageName[nameNum]).css('height')
+				var width = $(imageName[nameNum]).css('width')
+
+				var name = $('#image').attr('src')
+				var imgClone = $('#image')
+					.clone(true)
+					.css('opacity', '0.7')
+				alldata.remove(name)
+				imgClone.css({
+					position: 'absolute',
+					top: '50px',
+					left: '50px'
+				})
+				$('#imgDiv')
+					.parent()
+					.append(imgClone)
+				imgClone.animate({
+						height: '150px',
+						width: '150px'
+					},
+					400
+				)
+				imgClone.animate({
+						left: $(imageName[nameNum]).offset().left,
+						top: $(imageName[nameNum]).offset().top
+					},
+					600
+				)
+				imgClone.animate({
+						height: height,
+						width: width
+					},
+					350,
+					function() {
+						$(imageName[nameNum]).attr('src', name)
+						nameNum = nameNum - 1
+					}
+				)
+				clearInterval(timer)
+				open = false
+			}
+		}
+		$(document).keydown(function(e) {
+			if (!e) var e = window.event
+			if (e.keyCode == 32) {
+				run()
+			}
+		})
+	})
+</script>
+
+</html>
